@@ -42,6 +42,12 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: groundMask
+  - name: background
     uniqueID: 3383604635
+    locked: 0
+  - name: Midde
+    uniqueID: 1992874193
+    locked: 0
+  - name: Fore
+    uniqueID: 3032545463
     locked: 0
