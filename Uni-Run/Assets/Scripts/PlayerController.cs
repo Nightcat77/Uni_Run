@@ -51,6 +51,7 @@ public class PlayerController : MonoBehaviour {
 
         playerRigidbody.velocity = Vector2.zero; //속도를 제로로 변경
         isDead = true; //사망상태를 true로 변경
+        GameManager.instance.OnPlayerDead();
     }
 
     private void OnTriggerEnter2D(Collider2D other) {
