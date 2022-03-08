@@ -23,7 +23,6 @@ public class PlatformSpawner : MonoBehaviour {
     void Start() {
         // 변수들을 초기화하고 사용할 발판들을 미리 생성
         platforms = new GameObject[count];
-
         for(int i = 0; i<count; i++)
         {
             platforms[i] = Instantiate(platformPrefab, poolPosition, Quaternion.identity);

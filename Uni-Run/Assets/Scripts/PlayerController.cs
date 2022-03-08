@@ -13,7 +13,9 @@ public class PlayerController : MonoBehaviour {
    private Animator animator; // 사용할 애니메이터 컴포넌트
    private AudioSource playerAudio; // 사용할 오디오 소스 컴포넌트
 
-   private void Start() {
+    public GameObject coin;
+
+    private void Start() {
         // 초기화
         playerRigidbody = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
@@ -40,6 +42,11 @@ public class PlayerController : MonoBehaviour {
             playerRigidbody.velocity = playerRigidbody.velocity * 0.5f;
         }
         animator.SetBool("Grounded", isGrounded);
+        if (GameManager.instance.health <= 0)
+        {
+            Die();
+        }
+            
    }
 
     private void Die()
@@ -57,13 +64,37 @@ public class PlayerController : MonoBehaviour {
     private void OnTriggerEnter2D(Collider2D other) {
         // 트리거 콜라이더를 가진 장애물과의 충돌을 감지
         if (other.tag == "Dead" && !isDead) // 충돌한 상대방의 태그가 Dead이며 아직 사망하지 않았다면 Die()실행
-
         {
-            Die();
-        }
-   }
+            GameManager.instance.health = 0;
+            Destroy(GameManager.instance.hearts[0]);
+            Destroy(GameManager.instance.hearts[1]);
+            Destroy(GameManager.instance.hearts[2]);
 
-   private void OnCollisionEnter2D(Collision2D collision) {
+        }
+        if (other.tag == "Demage" && !isDead)
+        {
+            GameManager.instance.Demaged();
+        }
+        if(other.tag == "Coin" && !isDead)
+        {
+            
+            GameManager.instance.AddScore(3);
+            GameManager.instance.isTouched = true;
+            Destroy(other.gameObject);
+        }
+    }
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.tag == "Demage" && !isDead)
+            GameManager.instance.isDemaged = false;
+        if (collision.tag == "Coin" && !isDead)
+        {
+            GameManager.instance.isTouched = false;
+            
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision) {
         // 바닥에 닿았음을 감지하는 처리
         if (collision.contacts[0].normal.y > 0.7f) //어떤 콜라이더와 닿았으며 충돌표면이 위쪽을 보고있으면
         {

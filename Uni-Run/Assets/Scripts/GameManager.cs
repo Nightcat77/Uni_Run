@@ -8,11 +8,17 @@ public class GameManager : MonoBehaviour {
     public static GameManager instance; // 싱글톤을 할당할 전역 변수
 
     public bool isGameover = false; // 게임 오버 상태
+    public bool isDemaged;
+    public bool isTouched=false;
+    bool isResume=false;
     public Text scoreText; // 점수를 출력할 UI 텍스트
+    //public Text healthText;
+    public GameObject menu;
     public GameObject gameoverUI; // 게임 오버시 활성화 할 UI 게임 오브젝트
+    public GameObject[] hearts;
 
     private int score = 0; // 게임 점수
-
+    public int health;
     // 게임 시작과 동시에 싱글톤을 구성
     void Awake() {
         // 싱글톤 변수 instance가 비어있는가?
@@ -38,11 +44,15 @@ public class GameManager : MonoBehaviour {
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Exit();
+        }
     }
 
     // 점수를 증가시키는 메서드
     public void AddScore(int newScore) {
-        if (!isGameover)
+        if (!isGameover&&!isTouched)
         {
             score += newScore;
             scoreText.text = "Score : " + score;
@@ -53,5 +63,39 @@ public class GameManager : MonoBehaviour {
     public void OnPlayerDead() {
         isGameover = true;
         gameoverUI.SetActive(true);
+    }
+    public  void Demaged()
+    {
+        if (!isGameover&&!isDemaged)
+        {
+            health -= 1;
+
+            Destroy(hearts[health]);
+            isDemaged = true;
+        }
+    }
+    public void Menu()
+    {
+        if (!isResume)
+        {
+            menu.SetActive(true);
+            Time.timeScale = 0;
+            isResume = true;
+        }
+        else if (isResume)
+        {
+            menu.SetActive(false);
+            Time.timeScale = 1;
+            isResume = false;
+        }
+    }
+    public void Restart()
+    {
+        SceneManager.LoadScene("Main");
+        Time.timeScale = 1;
+    }
+    public void Exit()
+    {
+        Application.Quit();
     }
 }
